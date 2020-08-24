@@ -49,16 +49,16 @@
 
     <Button
         android:id="@+id/button_start"
-        android:layout_width="303dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="56dp"
-        android:background="@color/colorPrimary"
+        android:layout_width="309dp"
+        android:layout_height="80dp"
+        android:background="@drawable/custom_button_filled"
         android:fontFamily="@font/baloo"
         android:text=" START PRACTICE"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="0.907" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

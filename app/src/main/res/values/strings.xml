@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MultiplyTest</string>
+    <string name="app_name">Multiply Test</string>
     <string name="main_screen_text">Select the multiplication table you want to practice:</string>
     <string name="main_button_text">Button</string>
 </resources>
