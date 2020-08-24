@@ -14,7 +14,6 @@ class QuestionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
-        this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //get data from intent
         val intent = intent
@@ -56,11 +55,11 @@ class QuestionsActivity : AppCompatActivity() {
                 } else if (checkAnswer(userAnswer, result)) {
                     paintResult(true, result)
                     correctAnswers++
+                    button_confirm.text = "NEXT"
                 } else {
                     paintResult(false, result)
+                    button_confirm.text = "NEXT"
                 }
-
-                button_confirm.text = "NEXT"
 
             } else if (button_confirm.text == "NEXT") {
                 if (round <= 9) {
