@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionsActivity">
+    tools:context=".QuestionsActivity"
+    android:background="@color/colorBackground">
 
     <TextView
         android:id="@+id/table_selected"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textAlignment="center"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -26,7 +28,8 @@
         android:layout_marginTop="44dp"
         android:fontFamily="@font/baloo"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textColor="#FFFFFF"
+        android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.317"
@@ -39,10 +42,15 @@
         android:layout_width="97dp"
         android:layout_height="63dp"
         android:layout_marginTop="36dp"
+        android:textColorHint="#FFFFFF"
+        app:boxStrokeColor="#FFFFFF"
+        app:endIconTint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.789"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/table_selected">
+        app:layout_constraintTop_toBottomOf="@+id/table_selected"
+        app:passwordToggleTint="#FFFFFF"
+        app:startIconTint="#FFFFFF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/answer_text"
@@ -50,7 +58,9 @@
             android:layout_height="54dp"
             android:gravity="center"
             android:hint="Answer"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,6 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -88,6 +99,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/answer"
-        app:layout_constraintVertical_bias="0.469" />
+        app:layout_constraintVertical_bias="0.418" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,16 +3,30 @@ package com.example.multiply
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_questions.*
 
 class QuestionsActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+        // finally change the color
+        window.statusBarColor = ContextCompat.getColor(this,R.color.colorBackground)
+
         setContentView(R.layout.activity_questions)
 
         //get data from intent
@@ -37,12 +51,12 @@ class QuestionsActivity : AppCompatActivity() {
 
         button_confirm.setOnClickListener {
             if (button_confirm.text == "CONFIRM") {
-                //The machine calculates the correct answer and stores it in a variable
+                //The machine calculates the correct answer and we store it in a variable
                 var result = correctResult(tableNumber, round)
 
                 /*We assign the value entered by the user to the previously declared variable userAnswer.
-            * In case the input received is a String or null, we set userAnswer equal to 0, so that the app
-            * doesn't crash*/
+                 * In case the input received is a String or null, we set userAnswer equal to 0, so that the app
+                 * doesn't crash*/
                 try {
                     userAnswer = answer_text.text.toString().toInt()
                 } catch (e: NumberFormatException) {
@@ -50,7 +64,7 @@ class QuestionsActivity : AppCompatActivity() {
                 }
 
                 /*With if, we check if answer is correct or not, and show text and image*/
-                if(answer_text.text.toString().isEmpty()) {
+                if (answer_text.text.toString().isEmpty()) {
                     Toast.makeText(this, "Please write your answer", Toast.LENGTH_SHORT).show()
                 } else if (checkAnswer(userAnswer, result)) {
                     paintResult(true, result)
@@ -74,7 +88,7 @@ class QuestionsActivity : AppCompatActivity() {
                     //Empty the user input space from the previously inserted text
                     answer_text.setText("")
 
-                    //Abro automáticamente el teclado para la siguiente pregunta
+                    //I automatically open the keyboard for each new question
                     openKeyboardAuto()
 
                     button_confirm.text = "CONFIRM"
@@ -82,7 +96,7 @@ class QuestionsActivity : AppCompatActivity() {
                 } else {
                     //Start new screen once the 10 questions have been completed
                     val intent = Intent(this, ResultScreenActivity::class.java)
-                    intent.putExtra("correctAnswers",  correctAnswers)
+                    intent.putExtra("correctAnswers", correctAnswers)
                     startActivity(intent)
                     finish()
                 }
@@ -90,23 +104,23 @@ class QuestionsActivity : AppCompatActivity() {
         }
     }
 
-    //Función que imprime en pantalla la pregunta (los dos numeros a multiplicar y el simbolo = )
+    //Function that prints the question for each round
     private fun printQuestion(tableNumber: Int, round: Int) {
         question_text.text = "$tableNumber x $round = "
     }
 
-    //Función que calcula el resultado correcto para cada pregunta
+    //Function that calculates the correct answer for each question
     private fun correctResult(tableNumber: Int, round: Int): Int {
         return tableNumber * round
 
     }
 
-    //Función que compara el resultado correcto con el input introducido por el usuari
+    //Function that compares the correct answer with the one given by the user
     private fun checkAnswer(userAnswer: Int, result: Int): Boolean {
         return (userAnswer == result)
     }
 
-    //Función que muestra la imagen y el texto correspondientes dependiendo de si ha acertado o fallado
+    //Function that shows the image and text corresponding to whether user answered right or wrong
     private fun paintResult(c: Boolean, result: Int) {
         if (c) {
             imageView.setImageResource(R.drawable.right)
@@ -117,7 +131,7 @@ class QuestionsActivity : AppCompatActivity() {
         }
     }
 
-    //Función que abre el teclado automáticamente cuando paso a cada pregunta
+    //Function that opens the keyboard for each new question
     private fun openKeyboardAuto() {
         answer_text.requestFocus()
         answer_text.isFocusableInTouchMode = true
