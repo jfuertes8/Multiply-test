@@ -14,13 +14,16 @@ class ResultScreenActivity : AppCompatActivity() {
         //Get data from intent
         val intent = intent
         val finalResult: Int = intent.getIntExtra("correctAnswers", 0)
+        val totalQuestions: Int = intent.getIntExtra("totalQuestions", 0)
 
-        mark_out_of_ten.text = "$finalResult/10"
+        mark_out_of_ten.text = "$finalResult / $totalQuestions"
 
-        when (finalResult) {
-            10, 9, 8 -> medal_image.setImageResource(R.drawable.medal_gold)
-            7, 6, 5 -> medal_image.setImageResource(R.drawable.medal_silver)
-            else -> medal_image.setImageResource(R.drawable.medal_bronze)
+        if (finalResult == totalQuestions) {
+            medal_image.setImageResource(R.drawable.medal_gold)
+        } else if (finalResult <= totalQuestions/2) {
+            medal_image.setImageResource(R.drawable.medal_bronze)
+        } else {
+            medal_image.setImageResource(R.drawable.medal_silver)
         }
 
         button.setOnClickListener {

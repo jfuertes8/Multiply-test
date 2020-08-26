@@ -53,16 +53,13 @@
         android:id="@+id/button"
         android:layout_width="280dp"
         android:layout_height="80dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="45dp"
         android:background="@drawable/custom_button_filled"
         android:fontFamily="@font/baloo"
         android:text="PRACTICE AGAIN"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medal_image"
-        app:layout_constraintVertical_bias="0.288" />
+        app:layout_constraintTop_toBottomOf="@+id/medal_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
