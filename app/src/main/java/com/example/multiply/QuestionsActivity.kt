@@ -36,7 +36,7 @@ class QuestionsActivity : AppCompatActivity() {
         val practice: Boolean = intent.getBooleanExtra("practice", true)
 
         if (!practice) {
-            activity_layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundTest))
+            results_activity_layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundTest))
             button_confirm.setBackgroundResource(R.drawable.custom_button__test_filled)
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorBackgroundTest)
         } else {
@@ -73,9 +73,14 @@ class QuestionsActivity : AppCompatActivity() {
                 //If we reach the final round, we jump to the next activity
                 if (round > questions.size - 1) {
                     val totalQuestions = questions.size
+                    var practiceResults : Boolean = true
+                    if(!practice){
+                        practiceResults = false
+                    }
                     val intent = Intent(this, ResultScreenActivity::class.java)
                     intent.putExtra("correctAnswers", correctAnswers)
                     intent.putExtra("totalQuestions", totalQuestions)
+                    intent.putExtra("practiceResults", practiceResults)
                     startActivity(intent)
                     finish()
                 } else {
