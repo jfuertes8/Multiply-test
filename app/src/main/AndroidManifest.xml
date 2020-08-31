@@ -22,14 +22,14 @@
         <activity
             android:name=".ResultScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ExamScreen">
+            android:theme="@style/MainScreenTheme">
 
         </activity>
 
         <activity
             android:name=".QuestionsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ExamScreen">
+            android:theme="@style/MainScreenTheme">
 
         </activity>
 

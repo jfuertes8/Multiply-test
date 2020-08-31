@@ -25,23 +25,37 @@ class QuestionsActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         // finally change the color
-        window.statusBarColor = ContextCompat.getColor(this,R.color.colorBackground)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorBackgroundTest)
 
         setContentView(R.layout.activity_questions)
 
         //get data from intent
         val intent = intent
         val tableNumber: Int = intent.getIntExtra("table", 0)
+        val chosenQuestions: Int = intent.getIntExtra("chosenQuestions", 10)
+        val practice: Boolean = intent.getBooleanExtra("practice", true)
+
+        if (!practice) {
+            results_activity_layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBackgroundTest))
+            button_confirm.setBackgroundResource(R.drawable.custom_button__test_filled)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorBackgroundTest)
+        } else {
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorBackground)
+        }
+
+        //Get questions from Constants
+        val questions = Constants.getQuestions(practice, tableNumber, chosenQuestions)
+
 
         /*Set title text of screen with chosen table*/
         table_selected.text = "You have selected the table for $tableNumber"
 
         /*Variable to know in which multiplication question we are*/
-        var round = 1
+        var round = 0
 
         /*Function to paint each round's question. We call it here once to start the screen with the first question
         * already written*/
-        printQuestion(tableNumber, round)
+        printQuestion(round, questions)
 
         //We store the number of correct answers from the user
         var correctAnswers: Int = 0
@@ -49,75 +63,76 @@ class QuestionsActivity : AppCompatActivity() {
         //Variable to save the answer from user. It will later assign the input from the user
         var userAnswer = 0
 
+        var step = 0
+
         button_confirm.setOnClickListener {
-            if (button_confirm.text == "CONFIRM") {
-                //The machine calculates the correct answer and we store it in a variable
-                var result = correctResult(tableNumber, round)
-
-                /*We assign the value entered by the user to the previously declared variable userAnswer.
-                 * In case the input received is a String or null, we set userAnswer equal to 0, so that the app
-                 * doesn't crash*/
-                try {
-                    userAnswer = answer_text.text.toString().toInt()
-                } catch (e: NumberFormatException) {
-                    userAnswer = 0
-                }
-
-                /*With if, we check if answer is correct or not, and show text and image*/
-                if (answer_text.text.toString().isEmpty()) {
-                    Toast.makeText(this, "Please write your answer", Toast.LENGTH_SHORT).show()
-                } else if (checkAnswer(userAnswer, result)) {
-                    paintResult(true, result)
-                    correctAnswers++
-                    button_confirm.text = "NEXT"
-                } else {
-                    paintResult(false, result)
-                    button_confirm.text = "NEXT"
-                }
-
-            } else if (button_confirm.text == "NEXT") {
-                if (round <= 9) {
-                    //Increase in 1 the round variable, print new question with updated round
-                    round++
-                    printQuestion(tableNumber, round)
-
-                    //Quit the image and textAnswer preivously shown and written
-                    imageView.setImageResource(0)
-                    answer.text = ""
-
-                    //Empty the user input space from the previously inserted text
-                    answer_text.setText("")
-
-                    //I automatically open the keyboard for each new question
-                    openKeyboardAuto()
-
-                    button_confirm.text = "CONFIRM"
-
-                } else {
-                    //Start new screen once the 10 questions have been completed
+            if (answer_text.text.toString().isEmpty()) {
+                //We show a toast if the user didn't input anything in the textfield
+                Toast.makeText(this, "Please write your answer", Toast.LENGTH_SHORT).show()
+            } else {
+                //If we reach the final round, we jump to the next activity
+                if (round > questions.size - 1) {
+                    val totalQuestions = questions.size
+                    var practiceResults : Boolean = true
+                    if(!practice){
+                        practiceResults = false
+                    }
                     val intent = Intent(this, ResultScreenActivity::class.java)
                     intent.putExtra("correctAnswers", correctAnswers)
+                    intent.putExtra("totalQuestions", totalQuestions)
+                    intent.putExtra("practiceResults", practiceResults)
                     startActivity(intent)
                     finish()
+                } else {
+                    //If we haven't reached the final round we keep on checking and moving forward
+                    if (step == 0) {
+
+                        //We save on a variable the boolean of whether the user input is true or false
+                        val c = questions[round].check(answer_text.text.toString().toInt())
+
+                        //If true, we increase in one the number of correct answers
+                        if (c) correctAnswers++
+
+                        //We paint the "right" or "wrong" image and the text below it
+                        paintResult(c, questions[round].getResult())
+
+                        printNextButton(round, questions)
+
+                        step = 1
+
+                        //We increase round by 1
+                        round++
+
+                    } else {
+
+                        //We print the new question again
+                        printQuestion(round, questions)
+
+                        //Quit the image and textAnswer preivously shown and written
+                        imageView.setImageResource(0)
+                        answer.text = ""
+
+                        //Empty the user input space from the previously inserted text
+                        answer_text.setText("")
+
+                        //I automatically open the keyboard for each new question
+                        openKeyboardAuto()
+
+                        button_confirm.text = "CHECK ANSWER"
+                        step = 0
+                    }
                 }
             }
         }
     }
 
+    //FUNCTIONS---------------------------------------------------------------------------------------------------
+
     //Function that prints the question for each round
-    private fun printQuestion(tableNumber: Int, round: Int) {
-        question_text.text = "$tableNumber x $round = "
-    }
-
-    //Function that calculates the correct answer for each question
-    private fun correctResult(tableNumber: Int, round: Int): Int {
-        return tableNumber * round
-
-    }
-
-    //Function that compares the correct answer with the one given by the user
-    private fun checkAnswer(userAnswer: Int, result: Int): Boolean {
-        return (userAnswer == result)
+    @SuppressLint("SetTextI18n")
+    private fun printQuestion(round: Int, questions: ArrayList<Question>) {
+        question_text.text =
+            questions[round].num1.toString() + " x " + questions[round].num2.toString() + " = "
     }
 
     //Function that shows the image and text corresponding to whether user answered right or wrong
@@ -128,6 +143,14 @@ class QuestionsActivity : AppCompatActivity() {
         } else {
             imageView.setImageResource(R.drawable.wrong)
             answer.text = "Sorry. The right answer was $result"
+        }
+    }
+    //Function which changes the key printed on the button after completing final round
+    private fun printNextButton(round: Int, questions: ArrayList<Question>) {
+        if(round == questions.size - 1) {
+            button_confirm.text = "SEE RESULTS"
+        } else {
+            button_confirm.text= "NEXT QUESTION"
         }
     }
 
@@ -142,3 +165,4 @@ class QuestionsActivity : AppCompatActivity() {
         )
     }
 }
+
